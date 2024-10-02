@@ -26,16 +26,16 @@ args = parser.parse_args()
 def aggfunc(filename=args.filename, solv_dens=args.solv_dens, solv_sld=args.solv_sld, sol_dens=args.sol_dens, sol_mw=args.sol_mw, sol_sld=args.sol_sld, sol_conc=args.sol_conc):
     na=6.023e+23
     df = pd.read_csv(f'{filename}', sep=',')
-    iq = np.average(df['I_mod'].head(args.n))
+    i0 = np.average(df['I_mod'].head(args.n))
     vol_s = 1/args.sol_dens
     delta_sld = (args.solv_sld-args.sol_sld)*10000000000
-    mw_agg = (iq*na) / ( (args.sol_conc * (vol_s**2) * (delta_sld**2)) )
+    mw_agg = (i0*na) / ( (args.sol_conc * (vol_s**2) * (delta_sld**2)) )
     nagg = mw_agg / args.sol_mw
     print(f'{args.filename}')
-    print(f'I(Q)0 = {iq}')
+    print(f'I(Q)0 = {round(i0,5)}')
     print(f'Aggregate Mw = {round(mw_agg,1)}')
     print(f'Nagg = {round(nagg,1)}')
-    outdata = {'IQ0': [iq], 'MwAgg': [mw_agg], 'NAgg': [nagg]}
+    outdata = {'IQ0': [i0], 'MwAgg': [mw_agg], 'NAgg': [nagg]}
     dfo = pd.DataFrame(outdata)
     dfo.to_csv(f"{args.filename}.ag0", decimal='.', sep=' ')
 
